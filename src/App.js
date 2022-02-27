@@ -45,13 +45,28 @@ export default function App() {
     }
   }
 
+  const wave = async () => {
+    try {
+      const { ethereum } = window;
+      if (ethereum) {
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        const wavePortalContract = new ethers.Contract(contractAddress, contractAPI, signer);
+        let count = await wavePortalContract.getTotalWaves();
+        console.log("Retrieved total wave count is", count.toNumber());
+        console.log("Signer:", signer);
+      } else {
+        console.log("Ethereum object doesn't exist");
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   useEffect(() => {
     checkIfWalletIsConnected();
   }, []);
 
-  const wave = () => {
-
-  }
 
   return (
     <div className="mainContainer">
@@ -66,7 +81,7 @@ export default function App() {
         </div>
 
         {currentAccount && (
-          <button className="waveButton" onClick={connectWallet}>
+          <button className="waveButton" onClick={wave}>
           Wave at Me
           </button>
         )}
