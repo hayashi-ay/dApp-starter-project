@@ -4,12 +4,26 @@ import './App.css';
 
 export default function App() {
 
-  const checkIfWalletIsConnected = () => {
-    const { ethereum } = window;
-    if (!ethereum) {
-      console.log("Ethereum object not found. Make sure you have metamask!");
-    } else {
-      console.log("Ethereum object is found", ethereum);
+  const checkIfWalletIsConnected = async () => {
+    try {
+      const { ethereum } = window;
+      if (!ethereum) {
+        console.log("Ethereum object not found. Make sure you have metamask!");
+        return ;
+      } else {
+        console.log("Ethereum object is found.", ethereum);
+      }
+
+      const accounts = await ethereum.request({ method: "eth_accounts" });
+      console.log(accounts);
+      if (accounts.length === 0) {
+        console.log("No authorized account found");
+        return ;
+      }
+      const account = accounts[0];
+      console.log("An authorized account found.", account);
+    } catch (e) {
+      console.log(e);
     }
   }
 
