@@ -1,8 +1,21 @@
-import * as React from "react";
+import React, { useEffect } from "react";
 import { ethers } from "ethers";
 import './App.css';
 
 export default function App() {
+
+  const checkIfWalletIsConnected = () => {
+    const { ethereum } = window;
+    if (!ethereum) {
+      console.log("Ethereum object not found. Make sure you have metamask!");
+    } else {
+      console.log("Ethereum object is found", ethereum);
+    }
+  }
+
+  useEffect(() => {
+    checkIfWalletIsConnected();
+  }, []);
 
   const wave = () => {
 
