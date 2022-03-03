@@ -86,11 +86,13 @@ export default function App() {
         const singer = provider.getSigner();
         const wavePortalContract = new ethers.Contract(contractAddress, contractABI, singer);
         const data = await wavePortalContract.getAllWaves();
+        console.log(data);
         const waves = data.map(wave => {
           return {
             address: wave.waver,
             timestamp: new Date(wave.timestamp * 1000),
             message: wave.message,
+            winning: wave.winning,
           };
         });
         setAllWaves(waves);
@@ -105,14 +107,15 @@ export default function App() {
   useEffect(() => {
     let wavePortalContract;
 
-    const onNewWave = (from, timestamp, message) => {
-      console.log("NewWave", from, timestamp, message);
+    const onNewWave = (from, timestamp, message, winning) => {
+      console.log("NewWave", from, timestamp, message, winning);
       setAllWaves(prevState => [
         ...prevState,
         {
           address: from,
           timestamp: new Date(timestamp * 1000),
           message: message,
+          winning: winning,
         },
       ]);
     };
@@ -176,6 +179,7 @@ export default function App() {
                 <div>Address: {wave.address}</div>
                 <div>Time: {wave.timestamp.toString()}</div>
                 <div>Message: {wave.message}</div>
+                <div>Winning: {ethers.utils.formatEther(wave.winning)} ether</div>
               </div>
             )
           })
